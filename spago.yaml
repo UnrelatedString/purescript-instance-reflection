@@ -3,6 +3,11 @@ package:
   description: Simple types to reflect instances of common classes
   dependencies:
     - prelude: ">=6.0.2 <7.0.0"
+    - contravariant
+    - control
+    - foldable-traversable
+    - quickcheck
+    - transformers
   test:
     main: Test.Main
     dependencies:
