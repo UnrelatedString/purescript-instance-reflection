@@ -6,11 +6,62 @@
         "core": {
           "dependencies": [
             {
+              "contravariant": ">=6.0.0 <7.0.0"
+            },
+            {
+              "control": ">=6.0.0 <7.0.0"
+            },
+            "foldable-traversable",
+            {
               "prelude": ">=6.0.2 <7.0.0"
-            }
+            },
+            "quickcheck",
+            "transformers"
           ],
           "build_plan": [
-            "prelude"
+            "arrays",
+            "bifunctors",
+            "console",
+            "const",
+            "contravariant",
+            "control",
+            "distributive",
+            "effect",
+            "either",
+            "enums",
+            "exceptions",
+            "exists",
+            "foldable-traversable",
+            "functions",
+            "functors",
+            "gen",
+            "identity",
+            "integers",
+            "invariant",
+            "lazy",
+            "lcg",
+            "lists",
+            "maybe",
+            "newtype",
+            "nonempty",
+            "numbers",
+            "orders",
+            "partial",
+            "prelude",
+            "profunctor",
+            "quickcheck",
+            "random",
+            "record",
+            "refs",
+            "safe-coerce",
+            "st",
+            "strings",
+            "tailrec",
+            "transformers",
+            "tuples",
+            "type-equality",
+            "unfoldable",
+            "unsafe-coerce"
           ]
         },
         "test": {
