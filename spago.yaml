@@ -3,7 +3,6 @@ package:
   description: Simple types to reflect instances of common classes
   dependencies:
     - prelude: ">=6.0.2 <7.0.0"
-    - newtypes
   test:
     main: Test.Main
     dependencies:
