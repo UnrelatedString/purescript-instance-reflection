@@ -10,24 +10,25 @@ import Prelude
 import Type.Proxy (Proxy)
 
 class ClassHierarchy :: forall k. k -> Symbol -> Row k -> Constraint
-class ClassHierarchy inst reflects supers | inst -> reflects, inst -> supers
+class ClassHierarchy inst reflects supers | inst -> reflects
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
   { map :: forall a b. (a -> b) -> f a -> f b
   }
 
-instance ClassHierarchy FunctorInst "Data.Functor (Functor)" ()
+instance ClassHierarchy FunctorInst "Data.Functor (Functor)" r
 
 functorInst :: forall f. Functor f => FunctorInst f
 functorInst = FunctorInst { map }
 
-newtype ApplyInst f = ApplyInst'
+newtype ApplyInst f = ApplyInst
   { apply :: forall a b. f (a -> b) -> f a -> f b
   }
 
 instance ClassHierarchy ApplyInst "Data.Apply (Apply)"
   ( "Data.Functor (Functor)" :: FunctorInst
+  | r
   )
 
 applyInst :: forall f. Apply f => ApplyInst f
