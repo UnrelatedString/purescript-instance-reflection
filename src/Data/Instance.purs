@@ -8,21 +8,11 @@ module Data.Instance
 import Prelude
 import Type.Proxy (Proxy)
 
-class ReflectInstance :: forall k. (k -> Type) -> k -> Constraint
-class ReflectInstance reflection for | reflection -> for where
-  reflectInstance :: reflection for
+-- | The kind of phantom types representing (Type -> Constraint)s which. actually does
+-- | it even make sense to care about orphan stuff any more at this point when like
+-- | you can easily homebrew this system anyways and this approach like very specifically
+-- | treats the names of . actually no I should just go back to the main branch and
+-- | make it build records of the newtypes like I was planning originally and ???
+data
 
-newtype FunctorInst :: (Type -> Type) -> Type
-newtype FunctorInst f = FunctorInst
-  { map :: forall a b. (a -> b) -> f a -> f b
-  }
-
-instance Functor f => ReflectInstance FunctorInst f where
-  reflectInstance = FunctorInst { map }
-
-newtype ApplyInst f = ApplyInst
-  { apply :: forall a b. f (a -> b) -> f a -> f b
-  }
-
-instance Apply f => ReflectInstance ApplyInst f where
-  reflectInstance = ApplyInst { apply }
+class InstanceFields
