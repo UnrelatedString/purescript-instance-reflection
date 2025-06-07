@@ -19,9 +19,9 @@ class ReflectInstance reflection for | reflection -> for where
 reflectFromNewtype
   :: forall reflection for for'
   . ReflectInstance reflection for
-  => Coercible for for'
+  => Coercible (reflection for) (reflection for')
   => (for' -> for) -> reflection for'
-reflectFromNewtype = coerce reflectInstance
+reflectFromNewtype _ = coerce (reflectInstance :: reflection for)
 
 class HasSupers :: forall k. (k -> Type) -> Row (k -> Type) -> Constraint
 class HasSupers reflection row
