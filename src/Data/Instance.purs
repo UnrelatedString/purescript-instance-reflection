@@ -2,8 +2,8 @@ module Data.Instance
   ( class ReflectInstance
   , reflectInstance
   , reflectFromNewtype
-  , AnySuper
-  , reflectAnySuper
+  , EqInst(..)
+  , Eq1Inst(..)
   , FunctorInst(..)
   , ApplyInst(..)
   ) where
@@ -13,8 +13,11 @@ import Data.Eq (class Eq1, eq1)
 import Safe.Coerce (class Coercible, coerce)
 import Type.Proxy (Proxy)
 
+class HasSupers :: forall k. (k -> Type) -> k -> Type -> Constraint
+class HasSupers reflection for via
+
 class ReflectInstance :: forall k. (k -> Type) -> k -> Constraint
-class ReflectInstance reflection for where
+class HasSupers reflection for (Proxy for) <= ReflectInstance reflection for where
   reflectInstance :: reflection for
 
 -- | Reflect a newtype's instance as if it were an instance for the wrapped type.
@@ -24,12 +27,6 @@ reflectFromNewtype
   => Coercible (reflection for) (reflection for')
   => (for' -> for) -> reflection for'
 reflectFromNewtype _ = coerce (reflectInstance :: reflection for)
-
-type AnySuper :: forall k. (k -> Type) -> Type
-type AnySuper reflection = forall for. ReflectInstance reflection for => forall super. ReflectInstance super for => super for
-
-reflectAnySuper :: forall for. Proxy for -> forall reflection. AnySuper reflection
-reflectAnySuper _ = reflectInstance
 
 newtype EqInst :: Type -> Type
 newtype EqInst a = EqInst
@@ -52,6 +49,8 @@ newtype FunctorInst f = FunctorInst
   { map :: forall a b. (a -> b) -> f a -> f b
   }
 
+instance HasSupers FunctorInst f via
+
 instance Functor f => ReflectInstance FunctorInst f where
   reflectInstance = FunctorInst { map }
 
@@ -60,5 +59,7 @@ newtype ApplyInst f = ApplyInst
   { apply :: forall a b. f (a -> b) -> f a -> f b
   }
 
-instance (Apply f, ReflectInstance FunctorInst f) => ReflectInstance ApplyInst f where
+instance HasSupers FunctorInst f via => HasSupers ApplyInst f via
+
+instance Apply f => ReflectInstance ApplyInst f where
   reflectInstance = ApplyInst { apply }
