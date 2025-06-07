@@ -3,8 +3,7 @@ module Data.Instance
   , reflectInstance
   , reflectFromNewtype
   , AnySuper
-  , class ProvidesAnySuper
-  , anySuper
+  , reflectAnySuper
   , FunctorInst(..)
   , ApplyInst(..)
   ) where
@@ -14,7 +13,7 @@ import Safe.Coerce (class Coercible, coerce)
 import Type.Proxy (Proxy)
 
 class ReflectInstance :: forall k. (k -> Type) -> k -> Constraint
-class ReflectInstance reflection for | reflection -> for where
+class ReflectInstance reflection for where
   reflectInstance :: reflection for
 
 -- | Reflect a newtype's instance as if it were an instance for the wrapped type.
@@ -30,15 +29,8 @@ type AnySuper reflection for
   = ReflectInstance reflection for
   => (forall reflection'. ReflectInstance reflection' for => reflection' for)
 
-class ProvidesAnySuper :: forall k. Type -> (k -> Type) -> k -> Constraint
-class ProvidesAnySuper a reflection for | a -> for where
-  anySuper :: a -> AnySuper reflection for
-
-instance ProvidesAnySuper (Proxy (reflection for)) reflection for where
-  anySuper _ = reflectInstance
-
-instance ProvidesAnySuper (Proxy for) reflection for where
-  anySuper _ = reflectInstance
+reflectAnySuper :: forall reflection for. Proxy for -> AnySuper reflection for
+reflectAnySuper _ = reflectInstance
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
