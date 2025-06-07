@@ -9,6 +9,7 @@ module Data.Instance
   ) where
 
 import Prelude
+import Data.Eq (class Eq1, eq1)
 import Safe.Coerce (class Coercible, coerce)
 import Type.Proxy (Proxy)
 
@@ -29,6 +30,22 @@ type AnySuper reflection = forall for. ReflectInstance reflection for => forall 
 
 reflectAnySuper :: forall for. Proxy for -> forall reflection. AnySuper reflection
 reflectAnySuper _ = reflectInstance
+
+newtype EqInst :: Type -> Type
+newtype EqInst a = EqInst
+  { eq :: a -> a -> Boolean
+  }
+
+instance Eq a => ReflectInstance EqInst a where
+  reflectInstance = { eq }
+
+newtype Eq1Inst :: (Type -> Type) -> Type
+newtype Eq1Inst f = Eq1Inst
+  { eq1 :: forall a. Eq a => f a -> f a -> Boolean
+  }
+
+instance Eq1 f => ReflectInstance Eq1Inst a where
+  reflectInstance = { eq1 }
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
