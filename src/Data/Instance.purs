@@ -24,12 +24,10 @@ reflectFromNewtype
   => (for' -> for) -> reflection for'
 reflectFromNewtype _ = coerce (reflectInstance :: reflection for)
 
-type AnySuper :: forall k. (k -> Type) -> k -> Type
-type AnySuper reflection for
-  = ReflectInstance reflection for
-  => (forall reflection'. ReflectInstance reflection' for => reflection' for)
+type AnySuper :: forall k. (k -> Type) -> Type
+type AnySuper reflection = forall for. ReflectInstance reflection for => forall super. ReflectInstance super for => super for
 
-reflectAnySuper :: forall for. Proxy for -> forall reflection. AnySuper reflection for
+reflectAnySuper :: forall for. Proxy for -> forall reflection. AnySuper reflection
 reflectAnySuper _ = reflectInstance
 
 newtype FunctorInst :: (Type -> Type) -> Type
