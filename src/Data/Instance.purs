@@ -7,6 +7,7 @@ module Data.Instance
   , Eq1Inst(..)
   , FunctorInst(..)
   , ApplyInst(..)
+  , ApplicativeInst(..)
   ) where
 
 import Prelude
@@ -64,3 +65,12 @@ newtype ApplyInst f = ApplyInst
 instance ReflectInstance via FunctorInst f => HasSupers via ApplyInst f
 instance Apply f => ReflectInstance (Proxy f) ApplyInst f where
   reflectInstance _ = ApplyInst { apply }
+
+newtype ApplicativeInst :: (Type -> Type) -> Type
+newtype ApplicativeInst f = ApplicativeInst
+  { pure :: forall a. a -> f a
+  }
+
+instance ReflectInstance via ApplyInst f => HasSupers via ApplicativeInst f
+instance Applicative f => ReflectInstance (Proxy f) ApplicativeInst f where
+  reflectInstance _ = ApplicativeInst { pure }
