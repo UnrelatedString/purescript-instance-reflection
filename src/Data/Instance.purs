@@ -3,6 +3,7 @@ module Data.Instance
   , reflectInstance
   , reflectFromNewtype
   , AnySuper
+  , class ProvidesAnySuper
   , anySuper
   , FunctorInst(..)
   , ApplyInst(..)
@@ -29,8 +30,12 @@ type AnySuper reflection for
   = ReflectInstance reflection for
   => (forall reflection'. ReflectInstance reflection' for => reflection' for)
 
-anySuper :: forall reflection for. Proxy (reflection for) -> AnySuper reflection for
-anySuper _ = reflectInstance
+class ProvidesAnySuper :: forall k. Type -> (k -> Type) -> k -> Constraint
+class ProvidesAnySuper a reflection for where
+  anySuper :: a -> AnySuper reflection for
+
+instance ProvidesAnySuper (Proxy (reflection for)) reflection for where
+  anySuper _ = reflectInstance
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
