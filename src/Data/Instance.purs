@@ -1,5 +1,6 @@
 module Data.Instance
   ( class ReflectInstance
+  , class HasSupers
   , reflectInstance
   , reflectFromNewtype
   , EqInst(..)
@@ -11,22 +12,22 @@ module Data.Instance
 import Prelude
 import Data.Eq (class Eq1, eq1)
 import Safe.Coerce (class Coercible, coerce)
-import Type.Proxy (Proxy)
+import Type.Proxy (Proxy(..))
 
 class HasSupers :: forall k. Type -> (k -> Type) -> k -> Constraint
 class HasSupers via reflection for | via -> for
 
 class ReflectInstance :: forall k. Type -> (k -> Type) -> k -> Constraint
-class HasSupers via reflection for <= ReflectInstance via reflection for where
+class HasSupers via reflection for <= ReflectInstance via reflection for | via -> for where
   reflectInstance :: via -> reflection for
 
 -- | Reflect a newtype's instance as if it were an instance for the wrapped type.
 reflectFromNewtype
   :: forall reflection for for'
-  . ReflectInstance reflection for
+  . ReflectInstance (Proxy for) reflection for
   => Coercible (reflection for) (reflection for')
-  => (for' -> for) -> reflection for'
-reflectFromNewtype _ = coerce (reflectInstance :: reflection for)
+  => (for' -> for) ->  reflection for'
+reflectFromNewtype _ = coerce (reflectInstance (Proxy @for) :: reflection for)
 
 newtype EqInst :: Type -> Type
 newtype EqInst a = EqInst
@@ -35,7 +36,7 @@ newtype EqInst a = EqInst
 
 instance HasSupers via EqInst a
 instance Eq a => ReflectInstance (Proxy a) EqInst a where
-  reflectInstance _ = { eq }
+  reflectInstance _ = EqInst { eq }
 
 newtype Eq1Inst :: (Type -> Type) -> Type
 newtype Eq1Inst f = Eq1Inst
@@ -44,7 +45,7 @@ newtype Eq1Inst f = Eq1Inst
 
 instance HasSupers via Eq1Inst f
 instance Eq1 f => ReflectInstance (Proxy f) Eq1Inst f where
-  reflectInstance _ = { eq1 }
+  reflectInstance _ = Eq1Inst { eq1 }
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
