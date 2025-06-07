@@ -29,8 +29,8 @@ type AnySuper reflection for
   = ReflectInstance reflection for
   => (forall reflection'. ReflectInstance reflection' for => reflection' for)
 
-reflectAnySuper :: forall reflection for. Proxy for -> Proxy reflection -> AnySuper reflection for
-reflectAnySuper _ _ = reflectInstance
+reflectAnySuper :: forall for. Proxy for -> forall reflection. AnySuper reflection for
+reflectAnySuper _ = reflectInstance
 
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
