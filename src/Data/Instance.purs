@@ -2,6 +2,8 @@ module Data.Instance
   ( class ReflectInstance
   , reflectInstance
   , reflectFromNewtype
+  , AnySuper
+  , anySuper
   , FunctorInst(..)
   , ApplyInst(..)
   ) where
@@ -22,6 +24,7 @@ reflectFromNewtype
   => (for' -> for) -> reflection for'
 reflectFromNewtype _ = coerce (reflectInstance :: reflection for)
 
+type AnySuper :: forall k. (k -> Type) -> k -> Type
 type AnySuper reflection for
   = ReflectInstance reflection for
   => (forall reflection'. ReflectInstance reflection' for => reflection' for)
