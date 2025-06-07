@@ -1,17 +1,27 @@
 module Data.Instance
   ( class ReflectInstance
   , reflectInstance
+  , reflectFromNewtype
   , FunctorInst(..)
   , ApplyInst(..)
   ) where
 
 import Prelude
 import Prim.Row (Cons)
+import Safe.Coerce (coerce)
 import Type.Proxy (Proxy)
 
 class ReflectInstance :: forall k. (k -> Type) -> k -> Constraint
 class ReflectInstance reflection for | reflection -> for where
   reflectInstance :: reflection for
+
+-- | Reflect a newtype's instance as if it were an instance for the wrapped type.
+fromNewtype
+  :: forall reflection for for'
+  . ReflectInstance reflection for
+  => Coercible for for'
+  => (for' -> for) reflection for'
+fromNewtype = coerce reflectInstance
 
 class HasSupers :: forall k. (k -> Type) -> Row (k -> Type) -> Constraint
 class HasSupers reflection row

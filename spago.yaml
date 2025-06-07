@@ -7,7 +7,9 @@ package:
     - control: ">=6.0.0 <7.0.0"
     - foldable-traversable
     - quickcheck
+    - safe-coerce
     - transformers
+    - untagged-union
   test:
     main: Test.Main
     dependencies:
