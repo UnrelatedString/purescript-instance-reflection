@@ -6,31 +6,34 @@ module Data.Instance
   ) where
 
 import Prelude
+import Prim.Row (Cons)
 import Type.Proxy (Proxy)
 
 class ReflectInstance :: forall k. (k -> Type) -> k -> Constraint
 class ReflectInstance reflection for | reflection -> for where
   reflectInstance :: reflection for
 
-class Super :: forall k. (k -> Type) -> (k -> Type) -> Constraint
-class Super r s where
-  immediateSuper :: forall a. r a -> s a
+class HasSupers :: forall k. (k -> Type) -> Row (k -> Type) -> Constraint
+class HasSupers reflection row
 
-data FunctorInst :: (Type -> Type) -> Type
-data FunctorInst f = FunctorInst {}
+class RowHasType row t
+
+instance Cons sym t row row' => RowHasType row t
+
+newtype FunctorInst :: (Type -> Type) -> Type
+newtype FunctorInst f = FunctorInst {}
   { map :: forall a b. (a -> b) -> f a -> f b
   }
 
 instance Functor f => ReflectInstance FunctorInst f where
-  reflectInstance = FunctorInst {} { map }
+  reflectInstance = FunctorInst { map }
 
-data ApplyInst :: (Type -> Type) -> Type
-data ApplyInst f = ApplyInst { "Functor" :: FunctorInst f }
+newtype ApplyInst :: (Type -> Type) -> Type
+newtype ApplyInst f = ApplyInst { "Functor" :: FunctorInst f }
   { apply :: forall a b. f (a -> b) -> f a -> f b
   }
 
 instance Apply f => ReflectInstance ApplyInst f where
-  reflectInstance = ApplyInst { "Functor": reflectInstance } { apply }
+  reflectInstance = ApplyInst { apply }
 
-instance Super ApplyInst FunctorInst where
-  immediateSuper (ApplyInst { "Functor": s} _) = s
+
