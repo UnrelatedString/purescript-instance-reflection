@@ -9,7 +9,6 @@ package:
     - quickcheck
     - safe-coerce
     - transformers
-    - untagged-union
   test:
     main: Test.Main
     dependencies:

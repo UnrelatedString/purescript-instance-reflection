@@ -16,6 +16,7 @@
               "prelude": ">=6.0.2 <7.0.0"
             },
             "quickcheck",
+            "safe-coerce",
             "transformers"
           ],
           "build_plan": [
