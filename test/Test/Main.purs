@@ -18,5 +18,5 @@ import Type.Proxy (Proxy(..))
 
 main :: Effect Unit
 main = runSpecAndExitProcess [prettyReporter] do
-  let arr = anySuper (Proxy@(ApplyInst Array))
+  let arr = anySuper (Proxy@Array)
   it "all passes if this module even compiles" $ pure unit

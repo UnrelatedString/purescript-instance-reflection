@@ -31,7 +31,7 @@ type AnySuper reflection for
   => (forall reflection'. ReflectInstance reflection' for => reflection' for)
 
 class ProvidesAnySuper :: forall k. Type -> (k -> Type) -> k -> Constraint
-class ProvidesAnySuper a reflection for where
+class ProvidesAnySuper a reflection for | a -> for where
   anySuper :: a -> AnySuper reflection for
 
 instance ProvidesAnySuper (Proxy (reflection for)) reflection for where
