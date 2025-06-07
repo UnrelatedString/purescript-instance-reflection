@@ -37,6 +37,9 @@ class ProvidesAnySuper a reflection for where
 instance ProvidesAnySuper (Proxy (reflection for)) reflection for where
   anySuper _ = reflectInstance
 
+instance ProvidesAnySuper (Proxy for) reflection for where
+  anySuper _ = reflectInstance
+
 newtype FunctorInst :: (Type -> Type) -> Type
 newtype FunctorInst f = FunctorInst
   { map :: forall a b. (a -> b) -> f a -> f b
