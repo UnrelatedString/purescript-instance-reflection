@@ -17,9 +17,6 @@ import Data.Instance
   )
 import Type.Proxy (Proxy(..))
 
-lift1FromProvider :: forall a b via for. ReflectInstance via ApplicativeInst for => via -> (a -> b) -> for a -> for b
-lift1FromProvider = reflectInstance >>> \(FunctorInst {map: lift1}) -> lift1
-
 main :: Effect Unit
 main = runSpecAndExitProcess [prettyReporter] do
   it "all passes if this module even compiles" $ pure unit
