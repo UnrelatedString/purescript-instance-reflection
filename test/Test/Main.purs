@@ -7,6 +7,7 @@ import Test.Spec (it)
 import Test.Spec.Runner.Node (runSpecAndExitProcess)
 import Test.Spec.Reporter.June.Pretty (prettyReporter)
 
+{-
 import Data.Instance
   ( class ReflectInstance
   , reflectInstance
@@ -16,6 +17,7 @@ import Data.Instance
   , ApplicativeInst(..)
   )
 import Type.Proxy (Proxy(..))
+-}
 
 main :: Effect Unit
 main = runSpecAndExitProcess [prettyReporter] do
